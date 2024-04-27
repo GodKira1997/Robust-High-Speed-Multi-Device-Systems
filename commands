@@ -1,0 +1,24 @@
+docker image build -t python:sensor1 /home/godkira/ds_project/Sensor1
+docker run python:sensor1
+
+docker image build -t python:sensor2 /home/godkira/ds_project/Sensor2
+docker run python:sensor2
+
+docker image build -t python:receiver1 /home/godkira/ds_project/Receiver1
+docker run python:receiver1
+
+docker image build -t python:receiver2 /home/godkira/ds_project/Receiver2
+docker run python:receiver2
+
+docker ps
+docker ps -a
+docker rm $(docker ps -a -q)
+docker images --filter "dangling=true"
+docker rmi <image_name>
+
+docker run -it <image_name>
+docker attach <container_id_or_name>
+docker run -it --name my_container <image_name>
+docker run -d ubuntu
+docker run -d --name my_container ubuntu
+docker attach <container_id_or_name>
