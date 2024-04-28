@@ -6,11 +6,10 @@ LABEL Maintainer="anurag.1997"
 
 # Any working directory can be chosen as per choice like '/' or '/home' etc
 # i have chosen /usr/app/src
-WORKDIR /home/godkira/ds_project/Receiver2
+WORKDIR /home/godkira/ds_project/Monitor
 
 #to COPY the remote file at working directory in container
-COPY receive.py ./
-COPY heartbeat_response.py ./
+COPY heartbeat_check.py ./
 COPY requirements.txt ./
 # Now the structure looks like this '/usr/app/src/test.py'
 
@@ -28,11 +27,10 @@ ENV PATH="/opt/conda/bin:${PATH}"
 RUN conda update -n base -c defaults conda && conda install -c conda-forge -y liblsl
 
 # Install any needed dependencies specified in requirements.txt
-RUN pip install pylsl
 RUN pip install paho-mqtt
 RUN conda install -c conda-forge paho-mqtt
 
 #CMD instruction should be used to run the software
 #contained by your image, along with any arguments.
 
-CMD [ "python", "./receive.py"]
+CMD [ "python", "./heartbeat_check.py"]

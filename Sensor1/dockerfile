@@ -10,6 +10,7 @@ WORKDIR /home/godkira/ds_project/Sensor1
 
 #to COPY the remote file at working directory in container
 COPY send.py ./
+COPY heartbeat_response.py ./
 COPY requirements.txt ./
 # Now the structure looks like this '/usr/app/src/test.py'
 
