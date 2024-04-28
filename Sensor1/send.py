@@ -1,41 +1,46 @@
-"""Example program to demonstrate how to send a multi-channel time series to
-LSL."""
-import sys
-import getopt
-
+import argparse
+import threading
 import time
-from random import random as rand
-
 from pylsl import StreamInfo, StreamOutlet, local_clock
+from heartbeat_response import response, print_log
+
+FILE_STREAM_LOG = 'lsl.log'
+DEVICE_NAME = "Sensor1"
+S_RATE = 1
+N_CHANNELS = 2
+TYPE = 'EEG'
+CHANNEL_FORMAT = 'float32'
 
 
-def main(argv):
-    srate = 1
-    name = 'Sensor1'
-    type = 'EEG'
-    n_channels = 2
-    help_string = 'SendData.py -s <sampling_rate> -n <stream_name> -t <stream_type>'
+def main(name, s_rate, s_type, n_channels, channel_format, stdout, log=False):
+    heartbeat_thread = threading.Thread(target=response, args=(DEVICE_NAME, stdout[1], log))
+    heartbeat_thread.start()
 
-    # first create a new stream info (here we set the name to BioSemi,
-    # the content-type to EEG, 8 channels, 100 Hz, and float-valued data) The
-    # last value would be the serial number of the device or some other more or
-    # less locally unique identifier for the stream as far as available (you
-    # could also omit it but interrupted connections wouldn't auto-recover)
-    info = StreamInfo(name, type, n_channels, srate, 'float32', 'sensor1')
+    # Create a new stream info
+    if stdout[0]:
+        print("Creating a new stream...")
+    if log:
+        print_log(FILE_STREAM_LOG, "Creating a new stream...")
+    info = StreamInfo(name, s_type, n_channels, s_rate, channel_format, DEVICE_NAME.lower())
 
     # next make an outlet
+    if stdout[0]:
+        print("Creating a stream outlet...")
+    if log:
+        print_log(FILE_STREAM_LOG, "Creating a stream outlet...")
     outlet = StreamOutlet(info)
 
-    print("now sending data...")
+    if stdout[0]:
+        print("Sending data...")
+    if log:
+        print_log(FILE_STREAM_LOG, "Sending data...")
     start_time = local_clock()
     sent_samples = 0
     count = 0
     while True:
         elapsed_time = local_clock() - start_time
-        required_samples = int(srate * elapsed_time) - sent_samples
+        required_samples = int(s_rate * elapsed_time) - sent_samples
         for sample_ix in range(required_samples):
-            # make a new random n_channels sample; this is converted into a
-            # pylsl.vectorf (the data type that is expected by push_sample)
             mysample = [count + i for i in range(n_channels)]
             count += n_channels
             # now send it
@@ -44,6 +49,20 @@ def main(argv):
         # now send it and wait for a bit before trying again.
         time.sleep(0.01)
 
+    heartbeat_thread.join()
+
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    parser = argparse.ArgumentParser(description="Stdout LSL Stream data or Heartbeat")
+    parser.add_argument('--sout', choices=['streams', 'heartbeat'], default='streams',
+                        help="Type of console output")
+    parser.add_argument('--log', action='store_true', default=False, help="Log the file")
+    # parser.add_argument('--sensors', nargs='+', help="List of sensors to receive data from")
+    args = parser.parse_args()
+    stdout1 = False
+    stdout2 = False
+    if args.sout == 'streams':
+        stdout1 = True
+    elif args.sout == 'heartbeat':
+        stdout2 = True
+    main(DEVICE_NAME, S_RATE, TYPE, N_CHANNELS, CHANNEL_FORMAT, (stdout1, stdout2), args.log)

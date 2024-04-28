@@ -35,4 +35,4 @@ RUN conda install -c conda-forge paho-mqtt
 #CMD instruction should be used to run the software
 #contained by your image, along with any arguments.
 
-CMD [ "python", "./receive.py"]
+ENTRYPOINT [ "python", "./receive.py"]

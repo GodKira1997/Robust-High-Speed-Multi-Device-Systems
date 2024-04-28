@@ -33,4 +33,4 @@ RUN conda install -c conda-forge paho-mqtt
 #CMD instruction should be used to run the software
 #contained by your image, along with any arguments.
 
-CMD [ "python", "./heartbeat_check.py"]
+ENTRYPOINT [ "python", "./heartbeat_check.py"]

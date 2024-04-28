@@ -1,17 +1,24 @@
 docker image build -t python:sensor1 /home/godkira/ds_project/Sensor1
-docker run -it --name sensor1 python:sensor1
+docker run -it --name sensor1 python:sensor1 --sout heartbeat --log
 
 docker image build -t python:sensor2 /home/godkira/ds_project/Sensor2
-docker run -it --name sensor2 python:sensor2
+docker run -it --name sensor2 python:sensor2 --sout heartbeat --log
 
 docker image build -t python:receiver1 /home/godkira/ds_project/Receiver1
-docker run -it --name receiver1 python:receiver1
+docker run -it --name receiver1 python:receiver1 --sout streams --log
 
 docker image build -t python:receiver2 /home/godkira/ds_project/Receiver2
-docker run -it --name receiver2 python:receiver2
+docker run -it --name receiver2 python:receiver2 --sout streams --log
 
 docker image build -t python:monitor /home/godkira/ds_project/Monitor
-docker run -it --name monitor python:monitor
+docker run -it --name monitor python:monitor --sout --log
+docker start monitor --sout --log
+
+docker rm sensor1
+docker rm sensor2
+docker rm receiver1
+docker rm receiver2
+docker rm monitor
 
 docker ps
 docker ps -a
