@@ -19,6 +19,7 @@ RUN ["pip", "install", "-r", "/opt/home/requirements.txt"]
 
 ADD server.py /opt/home
 ADD app.html /opt/home
+ADD lsl_reciever.py /opt/home
 ADD static /opt/home/static
 
 
