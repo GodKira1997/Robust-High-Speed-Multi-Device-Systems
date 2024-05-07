@@ -1,19 +1,30 @@
 from aiohttp import web
 from threading import Thread
+import argparse
+import numpy as np
 
 import socketio
 
 from multiprocessing import shared_memory
 shm_a = shared_memory.SharedMemory(create=True, size=10)
 
-
 sio = socketio.AsyncServer(async_mode='aiohttp')
 app = web.Application()
 sio.attach(app)
 
 ### Thread
-from lsl_reciever import make_lsl_loop
-t = Thread(target=make_lsl_loop(shm_a))
+from lsl_receiver import main_receive
+parser = argparse.ArgumentParser(description="Stdout LSL Stream data or Heartbeat")
+parser.add_argument('name', type=str, help="Name to server")
+# parser.add_argument('--sout', choices=['streams', 'heartbeat'], default='streams',
+#                     help="Type of console output")
+parser.add_argument('--log', action='store_true', default=False, help="Log the file")
+# parser.add_argument('--sensors', nargs='+', help="List of sensors to receive data from")
+args = parser.parse_args()
+stdout1 = True
+stdout2 = False
+t = Thread(target=main_receive(shm_a, args.name, (stdout1, stdout2), args.log))
+# t = Thread(target=make_lsl_loop(shm_a))
 t.start()
 
 

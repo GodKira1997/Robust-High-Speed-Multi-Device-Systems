@@ -4,7 +4,7 @@ import os
 
 
 FILE_HEARTBEAT_LOG = 'heartbeat.log'
-broker_hostname = "192.168.0.110"
+broker_hostname = "192.168.73.33"
 port = 1883
 THREAD1_TOPIC = "heartbeat_check"
 THREAD2_TOPIC = "heartbeat_response"
@@ -23,14 +23,14 @@ def response(dv_name="device", stdout=False, log=False):
         if stdout:
             print("Received message: ", msg)
         if log:
-            print_log(FILE_HEARTBEAT_LOG, "Received message: " + msg)
+            print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, "Received message: " + msg)
         if message.topic == THREAD1_TOPIC:
-            response_msg = msg + "_" + dv_name[6:]
+            response_msg = msg + "_" + dv_name
             result = client.publish(THREAD2_TOPIC, response_msg)
             if stdout:
                 print("Response sent: ", response_msg)
             if log:
-                print_log(FILE_HEARTBEAT_LOG, "Response sent: " + response_msg)
+                print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, "Response sent: " + response_msg)
         else:
             pass
 
@@ -39,13 +39,13 @@ def response(dv_name="device", stdout=False, log=False):
             if stdout:
                 print("Connected")
             if log:
-                print_log(FILE_HEARTBEAT_LOG, "Connected")
+                print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, "Connected")
             client.subscribe(THREAD1_TOPIC)
         else:
             if stdout:
                 print("could not connect, return code:", return_code)
             if log:
-                print_log(FILE_HEARTBEAT_LOG, "could not connect, return code:" + str(return_code))
+                print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, "could not connect, return code:" + str(return_code))
 
     # client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, dv_name)
     client = mqtt.Client(dv_name)
@@ -61,12 +61,12 @@ def response(dv_name="device", stdout=False, log=False):
             if not client.is_connected() and stdout:
                 print("Client not connected, Trying to connect...")
             if not client.is_connected() and log:
-                print_log(FILE_HEARTBEAT_LOG, "Client not connected, Trying to connect...")
+                print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, "Client not connected, Trying to connect...")
             time.sleep(1)
         if client.failed_connect and stdout:
             print('Connection failed, exiting...')
         if client.failed_connect and log:
-            print_log(FILE_HEARTBEAT_LOG, 'Connection failed, exiting...')
+            print_log(dv_name + "_" + FILE_HEARTBEAT_LOG, 'Connection failed, exiting...')
 
     finally:
         client.disconnect()

@@ -4,15 +4,6 @@ FROM python:latest
 #Labels as key value pair
 LABEL Maintainer="anurag.1997"
 
-# Any working directory can be chosen as per choice like '/' or '/home' etc
-# i have chosen /usr/app/src
-WORKDIR /home/godkira/ds_project/Monitor
-
-#to COPY the remote file at working directory in container
-COPY heartbeat_check.py ./
-COPY requirements.txt ./
-# Now the structure looks like this '/usr/app/src/test.py'
-
 # Install required dependencies
 RUN apt-get update && apt-get install -y wget python3-pip
 
@@ -29,6 +20,15 @@ RUN conda update -n base -c defaults conda && conda install -c conda-forge -y li
 # Install any needed dependencies specified in requirements.txt
 RUN pip install paho-mqtt
 RUN conda install -c conda-forge paho-mqtt
+
+# Any working directory can be chosen as per choice like '/' or '/home' etc
+# i have chosen /usr/app/src
+WORKDIR /home/godkira/ds_project/Monitor
+
+#to COPY the remote file at working directory in container
+COPY heartbeat_check.py ./
+COPY requirements.txt ./
+# Now the structure looks like this '/usr/app/src/test.py'
 
 #CMD instruction should be used to run the software
 #contained by your image, along with any arguments.

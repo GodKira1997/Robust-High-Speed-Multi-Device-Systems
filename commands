@@ -10,9 +10,12 @@ docker run -it --name receiver1 python:receiver1 --sout streams --log
 docker image build -t python:receiver2 /home/godkira/ds_project/Receiver2
 docker run -it --name receiver2 python:receiver2 --sout streams --log
 
+docker run -d --name primary --net mynetwork pyserver primary --log
+docker run -d --name backup --net mynetwork pyserver backup --log
+
 docker image build -t python:monitor /home/godkira/ds_project/Monitor
 docker run -it --name monitor python:monitor --sout --log
-docker start monitor --sout --log
+docker start -i monitor
 
 docker rm sensor1
 docker rm sensor2

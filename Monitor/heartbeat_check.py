@@ -6,7 +6,7 @@ import threading
 
 
 FILE_HEARTBEAT_LOG = 'heartbeat_checker.log'
-broker_hostname = "192.168.0.110"
+broker_hostname = "192.168.73.33"
 port = 1883
 THREAD1_TOPIC = "heartbeat_check"
 THREAD2_TOPIC = "heartbeat_response"
@@ -119,12 +119,13 @@ def monitor(stdout=False, log=False):
                     current_active_sensors = set()
             else:
                 msg = msg.split("_")
-                if stdout:
-                    print(msg)
-                    print(current_count, current_count % RETRIES, int(msg[0]))
-                if (current_count - (current_count % RETRIES) <= int(msg[0]) <=
-                        current_count):
-                    current_active_sensors.add(int(msg[1]))
+                if 'sensor' in msg[1].lower():
+                    # if stdout:
+                        # print(msg)
+                        # print(current_count, current_count % RETRIES, int(msg[0]))
+                    if (current_count - (current_count % RETRIES) <= int(msg[0]) <=
+                            current_count):
+                        current_active_sensors.add(int(msg[1][6:]))
 
         # client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, dv_name)
         client = mqtt.Client(dv_name)

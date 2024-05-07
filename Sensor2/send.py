@@ -5,10 +5,10 @@ from pylsl import StreamInfo, StreamOutlet, local_clock
 from heartbeat_response import response, print_log
 
 
-FILE_STREAM_LOG = 'lsl.log'
 DEVICE_NAME = "Sensor2"
-S_RATE = 2
-N_CHANNELS = 1
+FILE_STREAM_LOG = DEVICE_NAME + "_" + 'lsl.log'
+S_RATE = 0.25
+N_CHANNELS = 6
 TYPE = 'EEG'
 CHANNEL_FORMAT = 'float32'
 
@@ -37,11 +37,13 @@ def main(name, s_rate, s_type, n_channels, channel_format, stdout, log=False):
         print_log(FILE_STREAM_LOG, "Sending data...")
     start_time = local_clock()
     sent_samples = 0
-    count = 0
+    count = 100
     while True:
         elapsed_time = local_clock() - start_time
         required_samples = int(s_rate * elapsed_time) - sent_samples
         for sample_ix in range(required_samples):
+            if (count + n_channels) >= 256:
+                count = 100
             mysample = [count + i for i in range(n_channels)]
             count += n_channels
             # now send it

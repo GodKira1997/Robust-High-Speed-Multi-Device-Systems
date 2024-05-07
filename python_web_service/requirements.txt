@@ -12,3 +12,6 @@ python-socketio==5.11.2
 simple-websocket==1.0.0
 wsproto==1.2.0
 yarl==1.9.4
+paho-mqtt
+pylsl
+numpy
