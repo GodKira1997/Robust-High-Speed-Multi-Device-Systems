@@ -1,5 +1,5 @@
 # Robust-High-Speed-Multi-Device-Systems
-a modular system that can be used in lab situations where the reliability of the connection between sensors and the end user is unstable but a stable connection to data is required.
+A modular system that can be used in lab situations where the reliability of the connection between sensors and the end user is unstable but a stable connection to data is required.
 
 ## Introduction
 The world of robotics has many challenges plaguing it, sim-to-real, sensor failures, interactions with humans, and many more. For this work, we will be focusing on the ever-present concern of both detecting sensor malfunctions and recovering from them on a closed high-speed system. This problem can exist as the sensor itself is damaged and no longer transmitting data, the sensor is damaged and transmitting bad data, the data being corrupted during transfer, and parts of the internal network going down just to name a few.
@@ -12,7 +12,7 @@ We propose a fault-tolerant three part system to these problems
 * A pub/sub model for sensors transmitting their sensor data
 * A central processing system replicated with haproxy
 * A heartbeat monitoring system for all the sensors
-![Robust High-Speed Multi-Device Systems](https://github.com/user-attachments/assets/eaebf92d-404e-4d8c-9fc4-6d4285563772)
+![Robust High-Speed Multi-Device Systems](https://github.com/user-attachments/assets/9c70ce51-ca67-4b47-be84-e36af62b327e)
 
 ## References
 ```markdown
